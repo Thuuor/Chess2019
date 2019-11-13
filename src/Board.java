@@ -41,11 +41,9 @@ public class Board {
 	@Override
 	public String toString() {
 		String s = "";
-		char c = 'A';
 
 		for (int row = board.length - 1;row >= 0; row--) {
-			s += "\n";
-			s += row+1 + " ";
+			s += (row + 1) + " ";
 			for (int col = 0;col < board.length;col++) {
 				 if (board[row][col] == null) {
 					 s += ". ";
@@ -53,13 +51,42 @@ public class Board {
 					 s += board[row][col].getLetter() + " ";
 				 }
 			}
+			s += "\n";
+		}
+		s += "  ";
+		for (char c = 'A';c <= 'H';c++) {
+			s += c + " ";
 		}
 		s += "\n";
-		s += " ";
-		for (int i = 0;i < board.length;i++) {
-			s += " " + c;
-			 c++;
-		}
 		return s;
 	}
+	
+	public Piece getPieceAt(char col, int row) {
+		int realRow = row - 1;
+		int realCol = col - 'A';
+		return board[realRow][realCol];
+	}
+	
+	public boolean movePiece(Movement movement) {
+		Piece p = movement.piece;
+		int rowOrig = movement.originRow - 1;
+		int colOrig = movement.originColumn - 'A';
+		int rowDest = movement.destRow - 1;
+		int colDest = movement.destColumn - 'A';
+		if (rowOrig < 0 || rowOrig >= SIZE ||
+				rowDest < 0 || rowDest >= SIZE ||
+				colOrig < 0 || colOrig >= SIZE ||
+				colDest < 0 || colDest >= SIZE 
+				) {
+			return false;
+		}		
+		if (p != board[rowOrig][colOrig]) {
+			return false;
+		}
+		board[rowOrig][colOrig] = null;
+
+		board[rowDest][colDest] = p;
+		return true;
+	}
+	
 }
